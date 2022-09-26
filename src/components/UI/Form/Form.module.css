@@ -1,0 +1,56 @@
+.formMainDiv{
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.2);
+    max-width: 615px;
+    padding-bottom: 66px;
+    padding-top: 46px;
+    text-align: center;
+    width: 100%;
+}
+
+.form {
+    /* margin-bottom: 98px; */
+    margin-top: 41px;
+  }
+  
+  .inputgroup {
+    margin-bottom: 26px;
+  }
+  .inputgroup:nth-last-child(-n + 2) {
+    margin-bottom: 25px;
+  }
+  .inputgroup > label,
+  .inputgroup > input {
+    font-family: 'Roboto', sans-serif;
+    max-width: 420px;
+    text-align: left;
+    width: 80%;
+  }
+  .inputgroup > label {
+    color: #676767;
+    display: inline-block;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+  }
+  .inputgroup > input {
+    background: #f2f2f5;
+    border-radius: 4px;
+    border: 1px solid #e5e5e5;
+    color: #676767;
+    font-size: 16px;
+    height: 40px;
+    outline: 0;
+    padding: 0 15px;
+    transition: all 0.3s;
+  }
+  .inputgroup > input:focus {
+    background: #fff;
+    border-color: #c4c4c4;
+  }
+  .inputgroup > input::placeholder {
+    color: #c4c4c4;
+    font-size: 16px;
+  }
+  
+  
