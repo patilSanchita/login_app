@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from '../Login/Login';
 import Home from '../Home/Home';
@@ -6,9 +6,7 @@ import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import './App.css';
 
-class App extends Component {
-  
-  render(){
+function App() {
     localStorage.setItem('loginStatus',false);
     return (
       <>
@@ -24,8 +22,7 @@ class App extends Component {
       </div>
       <Footer />
       </>
-    );
-  }
+    )
 }
 
 export default App;

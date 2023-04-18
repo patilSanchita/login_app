@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Navigate } from 'react-router-dom';
 import axios from "axios";
 import * as appConstant from '../../../constants';
@@ -7,120 +7,150 @@ import Home from '../../container/Home/Home';
 import Button from "../../UI/Button/Button";
 import styles from './Form.module.css';
 
-class Form extends React.Component{
-    constructor(props){
-        super(props);
-        this.state={
-            username:'',
-            password:'',
-            loginStatus:false
-        }
+const Form = () => {
+
+    const [enteredUsername, setEnteredUsername] = useState('');
+    const [enteredPassword, setEnteredPassword] = useState('');
+    const [loginStatus, setLoginStatus] = useState(false);
+
+    const [enteredUsernameTouched, setEnteredUserTouched] = useState(false);
+    const [enteredPasswordIsTouched, setEnteredPasswordIsTouched] = useState(false);
+
+    const enteredUsernameIsvalid = enteredUsername.trim() !== '';
+    const usernameInputIsValid = !enteredUsernameIsvalid && enteredUsernameTouched;
+    
+    let pwdErrMsg = '';
+    let enteredPasswordIsvalid = false;
+    if(enteredPassword.trim() === ''){
+        pwdErrMsg = 'Please enter password.';
+        enteredPasswordIsvalid = false;
+    }else if(enteredPassword.length <= '8'){
+        pwdErrMsg = 'Password must contains minimum 8 characters.';
+        enteredPasswordIsvalid = false;
+    }else if(enteredPassword.length <= '10'){
+        pwdErrMsg = 'Password must contains atleast 1 special character, number and capital letter.';
+        enteredPasswordIsvalid = false;
+    }else{
+        enteredPasswordIsvalid = true;
     }
 
-    componentDidMount(){
-        if(this.props.panel === "Home"){
-            let userData = JSON.parse(localStorage.getItem('userDetails'));
-            // console.log("Stored Details:: "+JSON.stringify(userData));
-            this.setState({
-                username:userData.username,
-                password:userData.password
-            });
-        }
+    const passwordInputIsValid = !enteredPasswordIsvalid && enteredPasswordIsTouched;
+
+    let formIsvalid = false;
+
+    if(enteredUsernameIsvalid && enteredPasswordIsvalid){
+        formIsvalid = true;
     }
 
-    inputChangeHandler = (event) => {
-        this.setState({[event.target.id]:event.target.value});
+    const userNameChangeHandler = (event) => {
+        setEnteredUsername(event.target.value);
     }
 
-    //form handler function
-    handleSubmit = (e) => {
-        e.preventDefault();
-        let key = this.props.panel==="Login"? "login": "edit";
-        this.postDataToServer(this.state.username,this.state.password,key);
-        this.setState({username:'',password:''});
-    };
+    const userNameBlurHandler = (event) => {
+        setEnteredUserTouched(true);
+    }
 
-    //edit function to post data on server
-     postDataToServer = async(username,password,key) => {
-        const data = {
-            username:username,
-            password:password
-        };
-       
-        let urldata = "";
-        switch(key){
-            case "login" :
-                urldata=`${appConstant.API_URL}${appConstant.LOGIN_API}`
-                break;
-            case "create" :
-                urldata=`${appConstant.API_URL}${appConstant.CREATE_USER_API}`
-                break;
-            case "edit" :
-                urldata=`${appConstant.API_URL}${appConstant.EDIT_USER_API}`
-                break;
-            default:
-                console.log('default');
+    const passwordChangeHandler = (event) => {
+        setEnteredPassword(event.target.value);
+    }
+
+    const passwordBlurHandler = (event) => {
+        setEnteredPasswordIsTouched(true);
+    }
+
+    //form submit handler
+    const formSubmissionHandler = (event) => {
+        event.preventDefault();
+    
+        // console.log(enteredUsername, enteredPassword);
+        postDataToServer(enteredUsername, enteredPassword);
+
+        setEnteredUsername('');
+        setEnteredUserTouched(false);
+        setEnteredPassword('');
+        setEnteredPasswordIsTouched(false);
+    }
+
+    //function to post data on server
+    const postDataToServer = async(username,password) => {
+        let userName = "testuser";
+        let userPassword = "Qwerty@12345";
+
+        if(username === userName && password === userPassword){
+            setLoginStatus(true);
+            localStorage.setItem('loginStatus',true);
         }
 
-        axios({method: 'post', url: urldata, data: data})
-        .then((response) => {
-            // console.log("response: "+response.data);
-            if(response.data !== ""){
-                this.setState({
-                    username:response.data.username,
-                    password:response.data.password,
-                });
-                if(key === "login"){
-                    this.setState({ loginStatus:true});
-                }
-                localStorage.setItem("userDetails",JSON.stringify({username:response.data.username,password:response.data.password}));
-                notify.show(key==="create"?"User Added Successfully":key==="login"?"User login Successfully":"Password Updated", "success", 2000);
-            }else{""
-                notify.show(key==="create"?"User Already Exsist":"Incorrect username or password", "error", 2000);
-            }
-        },
-        (error) => {
-            console.log(error);
-            notify.show("Something went wrong", "error", 2000);
-        },
-        ).catch((error) => console.log("Error: "+error));;
+        // const data = {
+        //     username:username,
+        //     password:password
+        // };
+
+        // let urldata = "";
+        // urldata=`${appConstant.API_URL}${appConstant.LOGIN_API}`;
+        // console.log("urldata: "+urldata)
+
+        // axios({method: 'post', url: urldata, data: data})
+        // .then((response) => {
+        //     //console.log("response: "+response.data);
+        //     if(response.data !== ""){
+        //         this.setState({
+        //             username:response.data.username,
+        //             password:response.data.password,
+        //         });
+        //         setLoginStatus(true);
+        //         localStorage.setItem('loginStatus',true);
+        //         localStorage.setItem("userDetails",JSON.stringify({username:response.data.username,password:response.data.password}));
+        //         notify.show("User login Successfully", "success", 2000);
+        //     }else{""
+        //         notify.show("Incorrect username or password", "error", 2000);
+        //     }
+        // },
+        // (error) => {
+        //     console.log(error);
+        //     notify.show("Something went wrong", "error", 2000);
+        // },
+        // ).catch((error) => console.log("Error: "+error));;
 
     };
 
-    //registration function
-    handleClick = (e) => {
-        e.preventDefault();
-        this.postDataToServer(this.state.username,this.state.password,"create");
-        this.setState({username:'',password:''});
-    };
-
-    render(){
-
-        if(this.state.loginStatus === true){
-            return <Navigate  to="/home" />
-        }
+    if(loginStatus === true){
+        return <Navigate  to="/home" />
+    }
 
         return(
             <div>
                 <Notifications />
-                <div className={styles.formMainDiv}>
-                    <h3>{this.props.title}</h3>
-                    <form className={styles.form} onSubmit={this.handleSubmit}>
+                <div className={`${styles.formMainDiv} test`}>
+                    <form className={styles.form} onSubmit={formSubmissionHandler}>
                         <div className={styles.inputgroup}>
                             <label htmlFor="username">Username</label>
-                            <input id="username" type="text" name="username" value={this.state.username} onChange={this.inputChangeHandler} autoComplete="new-userName" required disabled={this.props.panel==="Login"?false:true}/>
+                            <input 
+                                id="username" 
+                                type="text"  
+                                onChange={userNameChangeHandler} 
+                                onBlur={userNameBlurHandler}
+                                value={enteredUsername}
+                            />
+                            {!enteredUsernameIsvalid && enteredUsernameTouched ?<p className="errortext">Username cannot be empty</p>:null}
                         </div>
                         <div className={styles.inputgroup}>
                             <label htmlFor="password">Password</label>
-                            <input id="password" type="password" name="password" value={this.state.password} onChange={this.inputChangeHandler} autoComplete="new-password" required/>
+                            <input
+                                id="password" 
+                                type="password" 
+                                onChange={passwordChangeHandler}
+                                onBlur={passwordBlurHandler}
+                                value={enteredPassword} 
+                            />
+                            {!enteredPasswordIsvalid && enteredPasswordIsTouched ? <p className="errortext">{pwdErrMsg}</p>:null}
                         </div>
-                        <Button id="loginBtn" type="submit">{this.props.panel==="Login"? "Login": "Edit"}</Button>
+                        <Button id="loginBtn" type="submit" disabled={!formIsvalid}>Login</Button>
                     </form>
-                    {this.props.panel==="Login" ? <Button id="registerBtn" type="submit" onClick={this.handleClick}>Register</Button>:null}
+                    <a href="#" id="forgotPwd">Forgot Password?</a>
                 </div>
             </div>
         )
-    }
 }
 
 export default Form;

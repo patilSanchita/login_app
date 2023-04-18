@@ -1,15 +1,11 @@
-import React, { Component } from 'react';
-import Form from '../../UI/Form/Form';
+import React from 'react';
 
-class Home extends Component{
-
-    render(){
-        return(
-            <div>
-                <Form panel="Home" title="Edit Login Details"/>
-            </div>
-        )
-    }
+function Home() {
+    return(
+        <div>
+            <p>Welcome to Home Page...</p>
+        </div>
+    )
 }
 
 export default Home;
