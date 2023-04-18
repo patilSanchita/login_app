@@ -31,22 +31,20 @@ const Header = () => {
         // ).catch((error) => console.log("Error: "+error));;
     }
 
-    console.log("test: "+loginStatus)
-
     return(
         <div id="hdrMain">
             <Notifications />
             <header id="header" className={styles.header}>
                 <nav id="navbar" className={styles.navbar}>
                     <div className="container">
-                        {loginStatus === true ? <ul>
+                        <ul>
                             <li>
                                 <a className="current" href="#"><HomeIcon /></a>
                             </li>
                              <li>
                                 <a href="/login" onClick={onClickLogout}><LogoutIcon /></a>
                             </li>
-                        </ul>:null}
+                        </ul>
                     </div>
                 </nav>
             </header>
