@@ -21,14 +21,13 @@ const Form = () => {
     
     let pwdErrMsg = '';
     let enteredPasswordIsvalid = false;
+    let regularExpression = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
+
     if(enteredPassword.trim() === ''){
         pwdErrMsg = 'Please enter password.';
         enteredPasswordIsvalid = false;
-    }else if(enteredPassword.length <= '8'){
-        pwdErrMsg = 'Password must contains minimum 8 characters.';
-        enteredPasswordIsvalid = false;
-    }else if(enteredPassword.length <= '10'){
-        pwdErrMsg = 'Password must contains atleast 1 special character, number and capital letter.';
+    }else if(!regularExpression.test(enteredPassword)){
+        pwdErrMsg = 'Password must be atleast 8 character long and contains 1 special character, number and capital letter.';
         enteredPasswordIsvalid = false;
     }else{
         enteredPasswordIsvalid = true;
@@ -61,8 +60,7 @@ const Form = () => {
     //form submit handler
     const formSubmissionHandler = (event) => {
         event.preventDefault();
-    
-        // console.log(enteredUsername, enteredPassword);
+
         postDataToServer(enteredUsername, enteredPassword);
 
         setEnteredUsername('');

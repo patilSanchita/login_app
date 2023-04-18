@@ -9,13 +9,6 @@ import styles from './Header.module.css';
 
 const Header = () => {
 
-    const [loginStatus, setLoginStatus] = useState(false);
-   
-    useEffect(() => {
-        let loginStatusDet = localStorage.getItem('loginStatus');
-        setLoginStatus(loginStatusDet);
-    });
-
     const onClickLogout = (event) => {
         localStorage.setItem('loginStatus',false);
         localStorage.setItem('userDetails',{});
@@ -38,13 +31,15 @@ const Header = () => {
         // ).catch((error) => console.log("Error: "+error));;
     }
 
+    console.log("test: "+loginStatus)
+
     return(
         <div id="hdrMain">
             <Notifications />
             <header id="header" className={styles.header}>
                 <nav id="navbar" className={styles.navbar}>
                     <div className="container">
-                        {loginStatus === "true" ? <ul>
+                        {loginStatus === true ? <ul>
                             <li>
                                 <a className="current" href="#"><HomeIcon /></a>
                             </li>
